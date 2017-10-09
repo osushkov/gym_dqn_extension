@@ -1,0 +1,4 @@
+include_rules
+
+: src/*.o \
+|> $(CC) %f -o %o $(CLFLAGS) |> hello_ext.so

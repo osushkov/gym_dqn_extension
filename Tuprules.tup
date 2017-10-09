@@ -1,0 +1,26 @@
+CC = g++
+
+CCFLAGS += -pthread
+CCFLAGS += -std=c++11
+CCFLAGS += -I/home/osushkov/Programming/boost_1_64_0
+CCFLAGS += -I/usr/include/python2.7
+CCFLAGS += -Wall -Wno-deprecated-declarations
+CCFLAGS += -fPIC
+
+ifdef RELEASE
+  CCFLAGS += -O3
+endif
+
+ifdef DEBUG
+  CCFLAGS += -pg
+  CLFLAGS += -pg
+  CCFLAGS += -g
+  CLFLAGS += -g
+endif
+
+CLFLAGS += -L/home/osushkov/Programming/boost_1_64_0/stage/lib
+CLFLAGS += -L/usr/lib/python2.7/config
+CLFLAGS += -lboost_python -lboost_numpy -lpython2.7
+CLFLAGS += -pthread
+CLFLAGS += -std=c++11
+CLFLAGS += -shared -Wl,--export-dynamic
