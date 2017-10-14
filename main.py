@@ -3,19 +3,15 @@ import agent
 import gym
 import sys
 import time
-sys.path.append("cpp")
-import hello_ext
 
 import run_loop
-import tabular_qlearner
+import decaying_value
+import dqn_learner
 
-world = hello_ext.World()
-
-print 'greetings!'
-print world.greet()
 
 TRAIN_EPISODES = 100000
 MAX_STEPS_PER_EPISODE = 1000
+
 
 class RewardTracker(object):
 
@@ -40,8 +36,11 @@ def _build_observers():
     observers.append(RewardTracker())
     return observers
 
+
 env = gym.make('MountainCar-v0')
-agent = tabular_qlearner.TabularQLearner(env.action_space, env.observation_space, TRAIN_EPISODES)
+
+exploration_rate = decaying_value.DecayingValue(1.0, 0.1, TRAIN_EPISODES)
+agent = dqn_learner.DQNLearner(env.action_space, env.observation_space, exploration_rate)
 observers = _build_observers()
 
 run_loop.run_loop(env, agent, TRAIN_EPISODES, MAX_STEPS_PER_EPISODE, observers)
