@@ -13,4 +13,5 @@ class DecayingValue(object):
         if iter >= self._num_iters:
             return self._end_value
         else:
+            # return self._start_value + iter * (self._end_value - self._start_value) / self._num_iters
             return self._start_value * (self._decay ** iter)

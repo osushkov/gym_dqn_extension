@@ -16,8 +16,6 @@ def _run_episode(env, agent, max_steps_per_episode, observers, episode):
         cur_step += 1
 
         if done:
-            if cur_step < 200:
-                print(cur_step)
             break
 
         if max_steps_per_episode is not None and cur_step >= max_steps_per_episode:

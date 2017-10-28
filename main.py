@@ -7,9 +7,10 @@ import time
 import run_loop
 import decaying_value
 import dqn_learner
+import memory
 
 
-TRAIN_EPISODES = 100000
+TRAIN_EPISODES = 3000
 MAX_STEPS_PER_EPISODE = 1000
 
 
@@ -22,8 +23,7 @@ class RewardTracker(object):
         self._episode_reward += reward
 
         if cur_iter == 0:
-            print("agent average reward: {}".format(self._episode_reward))
-
+            print("agent average reward {}: {}".format(episode, self._episode_reward))
             self._episode_reward = 0.0
 
 def render_observer(env, agent, episode, cur_iter, obs, action, reward):
@@ -37,10 +37,13 @@ def _build_observers():
     return observers
 
 
-env = gym.make('MountainCar-v0')
+# env = gym.make('MountainCar-v0')
+env = gym.make('CartPole-v0')
 
 exploration_rate = decaying_value.DecayingValue(1.0, 0.1, TRAIN_EPISODES)
-agent = dqn_learner.DQNLearner(env.action_space, env.observation_space, exploration_rate)
+beta = decaying_value.DecayingValue(0.4, 1.0, TRAIN_EPISODES)
+memory = memory.Memory(50000, env.observation_space.high.shape, 0.6, beta)
+agent = dqn_learner.DQNLearner(env.action_space, env.observation_space, exploration_rate, memory)
 observers = _build_observers()
 
 run_loop.run_loop(env, agent, TRAIN_EPISODES, MAX_STEPS_PER_EPISODE, observers)
